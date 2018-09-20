@@ -10,6 +10,9 @@ metadata:
     heritage: "{{ .Release.Service }}"
 spec:
   replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+        app: {{ template "nextcloud.fullname" . }}
   template:
     metadata:
       labels:
@@ -26,17 +29,13 @@ spec:
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
         env:
-        - name: ALLOW_EMPTY_PASSWORD
-          value: {{ .Values.allowEmptyPassword | quote }}
         {{- if .Values.mariadb.enabled }}
         - name: MYSQL_HOST
           value: {{ template "nextcloud.mariadb.fullname" . }}
-        - name: MYSQL_PORT_NUMBER
-          value: "3306"
         - name: MYSQL_DATABASE
-          value: {{ .Values.mariadb.mariadbDatabase | quote }}
+          value: {{ .Values.mariadb.db.name | quote }}
         - name: MYSQL_USER
-          value: {{ .Values.mariadb.mariadbUser | quote }}
+          value: {{ .Values.mariadb.db.user | quote }}
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -45,8 +44,6 @@ spec:
         {{- else }}
         - name: MYSQL_HOST
           value: {{ .Values.externalDatabase.host | quote }}
-        - name: MYSQL_PORT_NUMBER
-          value: {{ .Values.externalDatabase.port | quote }}
         - name: DATABASE_NAME
           value: {{ .Values.externalDatabase.database | quote }}
         - name: DATABASE_USER
@@ -90,23 +87,14 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         volumeMounts:
-        - name: apache-data
-          mountPath: /var/www/html
         - name: nextcloud-data
-          mountPath: /var/www/html/data
+          mountPath: /var/www/html
         {{- range .Values.persistence.extraExistingClaimMounts }}
         - name: {{ .name }}
           mountPath: {{ .mountPath }}
           readOnly: {{ .readOnly }}
         {{- end }}
       volumes:
-      - name: apache-data
-      {{- if .Values.persistence.apache.enabled }}
-        persistentVolumeClaim:
-          claimName: {{ if .Values.persistence.apache.existingClaim }}{{ .Values.persistence.apache.existingClaim }}{{- else }}{{ template "nextcloud.fullname" . }}-apache{{- end }}
-      {{- else }}
-        emptyDir: {}
-      {{- end }}
       - name: nextcloud-data
       {{- if .Values.persistence.nextcloud.enabled }}
         persistentVolumeClaim:

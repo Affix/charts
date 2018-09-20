@@ -57,13 +57,12 @@ The following table lists the configurable parameters of the nextcloud chart and
 | `ingress.annotations`               | An array of service annotations           | `nil`                                                   |
 | `ingress.tls`                       | Ingress TLS configuration                 | `[]`                                                    |
 | `networkPolicyApiVersion`           | The kubernetes network API version        | `extensions/v1beta1`                                    |
-| `nextcloudHost`                     | nextcloud host to create application URLs  | `nil`                                                   |
-| `nextcloudLoadBalancerIP`           | `loadBalancerIP` for the nextcloud Service | `nil`                                                   |
-| `nextcloudUsername`                 | User of the application                   | `user`                                                  |
-| `nextcloudPassword`                 | Application password                      | Randomly generated                                      |
-| `nextcloudEmail`                    | Admin email                               | `user@example.com`                                      |
+| `nextcloud.host`                    | nextcloud host to create application URLs | `nil`                                                   |
+| `nextcloud.port`                    | nextcloud port to create application URLs | `nil`                                                   |
+| `nextcloud.loadBalancerIP`          | `loadBalancerIP` for the nextcloud Service| `nil`                                                   |
+| `nextcloud.username`                | Admin user of the application             | `user`                                                  |
+| `nextcloud.password`                | Admin password                            | Randomly generated                                      |
 | `externalDatabase.host`             | Host of the external database             | `nil`                                                   |
-| `allowEmptyPassword`                | Allow DB blank passwords                  | `yes`                                                   |
 | `externalDatabase.host`             | Host of the external database             | `nil`                                                   |
 | `externalDatabase.port`             | Port of the external database             | `3306`                                                  |
 | `externalDatabase.database`         | Name of the existing database             | `nextcloud`                                      |
@@ -75,11 +74,6 @@ The following table lists the configurable parameters of the nextcloud chart and
 | `mariadb.mariadbUser`               | Database user to create                   | `bn_nextcloud`                                           |
 | `mariadb.mariadbRootPassword`       | MariaDB admin password                    | `nil`                                                   |
 | `serviceType`                       | Kubernetes Service type                   | `LoadBalancer`                                          |
-| `persistence.apache.enabled`        | Enable persistence using PVC              | `true`                                                  |
-| `persistence.apache.storageClass`   | PVC Storage Class for Apache volume       | `nil` (uses alpha storage class annotation)             |
-| `persistence.apache.existingClaim`  | An Existing PVC name for Apache volume    | `nil` (uses alpha storage class annotation)             |
-| `persistence.apache.accessMode`     | PVC Access Mode for Apache volume         | `ReadWriteOnce`                                         |
-| `persistence.apache.size`           | PVC Storage Request for Apache volume     | `1Gi`                                                   |
 | `persistence.nextcloud.enabled`     | Enable persistence using PVC              | `true`                                                  |
 | `persistence.nextcloud.storageClass` | PVC Storage Class for nextcloud volume     | `nil` (uses alpha storage class annotation)             |
 | `persistence.nextcloud.existingClaim`| An Existing PVC name for nextcloud volume  | `nil` (uses alpha storage class annotation)             |
